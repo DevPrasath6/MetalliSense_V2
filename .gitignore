@@ -1,0 +1,74 @@
+# Claude Code local settings (not project source)
+.claude/
+
+# Dependencies
+node_modules/
+venv/
+env/
+ENV/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables & secrets - never commit these
+.env
+.env.local
+*.env
+!.env.example
+*.pem
+*.key
+*.p12
+*service-account*.json
+firebase-service-account.json
+
+# ML model artifacts (regenerate via training scripts, not checked in)
+**/models/*.pkl
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build output
+dist/
+build/
+*.local
+
+# Editor/tooling
+.qodo
+TODO
+README_FOR_AI
