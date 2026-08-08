@@ -1,0 +1,12 @@
+.qodo
+node_modules
+*.env
+.prettierrc
+.eslintrc.json
+TODO
+README_FOR_AI
+firebase-service-account.json
+*firebase-service-account*.json
+*.pem
+*.key
+*.p12
