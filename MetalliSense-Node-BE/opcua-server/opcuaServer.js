@@ -17,6 +17,12 @@ class SpectrometerOPCUAServer {
       // Create OPC UA Server
       this.server = new OPCUAServer({
         port: 4334, // Standard OPC UA port + offset
+        // Loopback-only: this server only ever talks to the in-process
+        // SpectrometerOPCUAClient (opc.tcp://localhost:4334/...). Binding
+        // to all interfaces (the default) exposes a raw, unauthenticated
+        // TCP port publicly on cloud hosts like Render, where automated
+        // scanners hammer it with non-OPC-UA bytes.
+        host: '127.0.0.1',
         resourcePath: '/MetalliSense/Spectrometer',
         buildInfo: {
           productName: 'MetalliSense Spectrometer Simulator',
