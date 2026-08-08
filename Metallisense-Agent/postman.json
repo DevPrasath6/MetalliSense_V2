@@ -1,0 +1,547 @@
+{
+  "info": {
+    "name": "MetalliSense AI Service API",
+    "description": "Complete API collection for MetalliSense AI Service including ML Agents, Explainable AI Copilot, and Voice Services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "metallisense-api-collection",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    },
+    {
+      "key": "test_composition",
+      "value": "{\"Fe\":94.5,\"C\":3.2,\"Si\":2.0,\"Mn\":0.4,\"P\":0.05,\"S\":0.10}",
+      "type": "string"
+    },
+    {
+      "key": "test_grade",
+      "value": "GREY-IRON",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🆕 Explainable AI Copilot",
+      "item": [
+        {
+          "name": "1. Get Explanation for Analysis",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"composition\": {\n    \"Fe\": 94.5,\n    \"C\": 3.2,\n    \"Si\": 2.0,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.10\n  },\n  \"grade\": \"GREY-IRON\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/copilot/explain",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "explain"]
+            },
+            "description": "Get human-readable explanation for ML predictions. Runs full agent analysis and generates natural language explanation using Groq LLM."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Interactive Chat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Why do we need to add Manganese?\",\n  \"include_context\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/copilot/chat",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "chat"]
+            },
+            "description": "Ask follow-up questions about the latest analysis. The copilot maintains conversation history for context-aware responses."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Chat - Alternative Questions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What happens if we don't correct this deviation?\",\n  \"include_context\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/copilot/chat",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "chat"]
+            },
+            "description": "Example of another question you can ask"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Clear Chat History",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/copilot/chat/history",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "chat", "history"]
+            },
+            "description": "Clear conversation history for a fresh start"
+          },
+          "response": []
+        }
+      ],
+      "description": "Explainable AI endpoints using Groq LLM for natural language explanations"
+    },
+    {
+      "name": "🎤 Voice Services",
+      "item": [
+        {
+          "name": "1. Speech-to-Text (Transcribe)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "audio",
+                  "type": "file",
+                  "src": "/path/to/audio/file.wav",
+                  "description": "Select an audio file (WAV, MP3, M4A, OGG, FLAC)"
+                },
+                {
+                  "key": "language",
+                  "value": "en",
+                  "type": "text",
+                  "description": "Optional: Language code (en, es, fr, etc.)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/copilot/voice/transcribe",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "voice", "transcribe"]
+            },
+            "description": "Convert voice input to text using Groq Whisper large-v3. Upload an audio file and get transcribed text."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Text-to-Speech (Synthesize)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Silicon addition of 0.22 percent is recommended to reach the target range for GREY-IRON.\",\n  \"language\": \"en\",\n  \"slow\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/copilot/voice/synthesize",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "voice", "synthesize"]
+            },
+            "description": "Convert text to speech (MP3 format). Returns audio file that can be played."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Supported Languages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/copilot/voice/languages",
+              "host": ["{{base_url}}"],
+              "path": ["copilot", "voice", "languages"]
+            },
+            "description": "Get list of supported languages for voice services (12 languages: en, es, fr, de, it, pt, ru, ja, ko, zh, hi, ar)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Voice interaction endpoints: Speech-to-Text and Text-to-Speech"
+    },
+    {
+      "name": "🤖 ML Agent Endpoints",
+      "item": [
+        {
+          "name": "1. Agent Analysis (Main Production)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"composition\": {\n    \"Fe\": 81.2,\n    \"C\": 4.4,\n    \"Si\": 3.1,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.02\n  },\n  \"grade\": \"SG-IRON\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agents/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["agents", "analyze"]
+            },
+            "description": "⭐ RECOMMENDED: Main production endpoint. Runs full agent orchestration including anomaly detection and conditional alloy correction."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check health status of all models including copilot and voice services"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Available Grades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/grades",
+              "host": ["{{base_url}}"],
+              "path": ["grades"]
+            },
+            "description": "Get list of all available metal grades supported by the system"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Grade Specification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/grades/GREY-IRON",
+              "host": ["{{base_url}}"],
+              "path": ["grades", "GREY-IRON"]
+            },
+            "description": "Get composition specification for a specific grade. Change 'GREY-IRON' to any grade name."
+          },
+          "response": []
+        }
+      ],
+      "description": "Core ML agent endpoints for analysis and grade information"
+    },
+    {
+      "name": "🔧 Legacy Endpoints",
+      "item": [
+        {
+          "name": "1. Anomaly Detection Only",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"composition\": {\n    \"Fe\": 81.2,\n    \"C\": 4.4,\n    \"Si\": 3.1,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.02\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/anomaly/predict",
+              "host": ["{{base_url}}"],
+              "path": ["anomaly", "predict"]
+            },
+            "description": "Legacy endpoint: Run only anomaly detection. Use /agents/analyze for production."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Alloy Correction Only",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grade\": \"SG-IRON\",\n  \"composition\": {\n    \"Fe\": 81.2,\n    \"C\": 4.4,\n    \"Si\": 3.1,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.02\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/alloy/recommend",
+              "host": ["{{base_url}}"],
+              "path": ["alloy", "recommend"]
+            },
+            "description": "Legacy endpoint: Run only alloy correction. Use /agents/analyze for production."
+          },
+          "response": []
+        }
+      ],
+      "description": "Legacy endpoints maintained for backward compatibility"
+    },
+    {
+      "name": "📝 Test Scenarios",
+      "item": [
+        {
+          "name": "Scenario 1: Complete Workflow",
+          "item": [
+            {
+              "name": "Step 1: Check Health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["health"]
+                },
+                "description": "First, verify all services are running"
+              },
+              "response": []
+            },
+            {
+              "name": "Step 2: Run Analysis",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"composition\": {\n    \"Fe\": 94.5,\n    \"C\": 3.2,\n    \"Si\": 2.0,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.10\n  },\n  \"grade\": \"GREY-IRON\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/copilot/explain",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "explain"]
+                },
+                "description": "Get full explanation of the analysis"
+              },
+              "response": []
+            },
+            {
+              "name": "Step 3: Ask Follow-up Question",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Why is this considered high severity?\",\n  \"include_context\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/copilot/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "chat"]
+                },
+                "description": "Ask about the analysis results"
+              },
+              "response": []
+            },
+            {
+              "name": "Step 4: Generate Voice Output",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"text\": \"High severity anomaly detected. Immediate corrective action recommended.\",\n  \"language\": \"en\",\n  \"slow\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/copilot/voice/synthesize",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "voice", "synthesize"]
+                },
+                "description": "Convert explanation to speech"
+              },
+              "response": []
+            }
+          ],
+          "description": "Complete workflow: Health check → Analysis → Chat → Voice output"
+        },
+        {
+          "name": "Scenario 2: Multi-Language Test",
+          "item": [
+            {
+              "name": "1. Get Supported Languages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/copilot/voice/languages",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "voice", "languages"]
+                },
+                "description": "Check available languages"
+              },
+              "response": []
+            },
+            {
+              "name": "2. Text-to-Speech (Spanish)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"text\": \"Se detectó una anomalía de alta gravedad. Se recomienda acción correctiva inmediata.\",\n  \"language\": \"es\",\n  \"slow\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/copilot/voice/synthesize",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "voice", "synthesize"]
+                },
+                "description": "Test Spanish text-to-speech"
+              },
+              "response": []
+            },
+            {
+              "name": "3. Text-to-Speech (French)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"text\": \"Anomalie de haute gravité détectée. Action corrective immédiate recommandée.\",\n  \"language\": \"fr\",\n  \"slow\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/copilot/voice/synthesize",
+                  "host": ["{{base_url}}"],
+                  "path": ["copilot", "voice", "synthesize"]
+                },
+                "description": "Test French text-to-speech"
+              },
+              "response": []
+            }
+          ],
+          "description": "Test multi-language voice synthesis"
+        },
+        {
+          "name": "Scenario 3: Different Grades",
+          "item": [
+            {
+              "name": "1. Analysis - GREY-IRON",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"composition\": {\n    \"Fe\": 94.5,\n    \"C\": 3.2,\n    \"Si\": 2.0,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.10\n  },\n  \"grade\": \"GREY-IRON\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agents/analyze",
+                  "host": ["{{base_url}}"],
+                  "path": ["agents", "analyze"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "2. Analysis - SG-IRON",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"composition\": {\n    \"Fe\": 81.2,\n    \"C\": 4.4,\n    \"Si\": 3.1,\n    \"Mn\": 0.4,\n    \"P\": 0.05,\n    \"S\": 0.02\n  },\n  \"grade\": \"SG-IRON\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agents/analyze",
+                  "host": ["{{base_url}}"],
+                  "path": ["agents", "analyze"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. Analysis - STEEL",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"composition\": {\n    \"Fe\": 98.5,\n    \"C\": 0.25,\n    \"Si\": 0.3,\n    \"Mn\": 0.6,\n    \"P\": 0.03,\n    \"S\": 0.02\n  },\n  \"grade\": \"STEEL\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agents/analyze",
+                  "host": ["{{base_url}}"],
+                  "path": ["agents", "analyze"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Test analysis with different metal grades"
+        }
+      ],
+      "description": "Pre-configured test scenarios for common workflows"
+    }
+  ]
+}
