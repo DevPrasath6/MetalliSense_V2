@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, User, Building2, UserPlus, Briefcase } from "lucide-react";
@@ -16,8 +16,17 @@ export default function Signup() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { signup, loginWithGoogle } = useAuth();
+  const { user, signup, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  // Covers the signInWithRedirect fallback in loginWithGoogle: that flow
+  // navigates away and back, so `await loginWithGoogle()` below never
+  // resolves in-page - react to `user` becoming set instead.
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const roles = [
     { value: "Chemical Engineer 1", label: "Chemical Engineer 1" },

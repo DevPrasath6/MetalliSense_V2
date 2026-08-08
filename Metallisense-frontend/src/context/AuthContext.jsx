@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   sendEmailVerification,
@@ -53,6 +55,22 @@ export const AuthProvider = ({ children }) => {
     });
 
     return unsubscribe;
+  }, []);
+
+  // Pick up the result of a signInWithRedirect() fallback (see loginWithGoogle
+  // below). onAuthStateChanged above already reflects a successful sign-in;
+  // this only needs to surface errors from the redirect itself.
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          toast.success("Logged in with Google successfully!");
+        }
+      })
+      .catch((error) => {
+        console.error("Google redirect login error:", error);
+        toast.error("Failed to log in with Google");
+      });
   }, []);
 
   // Signup with email and password
@@ -148,6 +166,18 @@ export const AuthProvider = ({ children }) => {
       toast.success("Logged in with Google successfully!");
       return result.user;
     } catch (error) {
+      // Browsers frequently block signInWithPopup (popup blockers, some
+      // mobile browsers, in-app webviews) - fall back to a full-page
+      // redirect flow instead of just failing. The redirect result is
+      // picked up by the getRedirectResult() effect below on return.
+      if (
+        error.code === "auth/popup-blocked" ||
+        error.code === "auth/operation-not-supported-in-this-environment"
+      ) {
+        await signInWithRedirect(auth, googleProvider);
+        return null;
+      }
+
       console.error("Google login error:", error);
 
       let errorMessage = "Failed to log in with Google";
