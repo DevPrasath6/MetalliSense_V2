@@ -40,9 +40,9 @@ services:
       - key: JWT_COOKIE_EXPIRES_IN
         value: 1
       - key: AI_SERVICE_INDIVIDUAL_URL
-        sync: false
+        value: https://metallisense-agent.onrender.com
       - key: AI_SERVICE_AGENT_URL
-        sync: false
+        value: https://metallisense-agent.onrender.com
       - key: ALLOWED_ORIGINS
         value: http://localhost:5173,http://localhost:3000,https://metalli-sense-v2.vercel.app
       - key: GOOGLE_GEMINI_API_KEY
