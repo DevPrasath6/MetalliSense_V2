@@ -1,0 +1,55 @@
+services:
+  # Python AI/ML service (FastAPI) - trains models at build time from the
+  # committed dataset since app/models/*.pkl is gitignored.
+  - type: web
+    name: metallisense-agent
+    runtime: python
+    plan: free
+    rootDir: Metallisense-Agent
+    buildCommand: pip install -r requirements.txt && python setup.py
+    startCommand: API_HOST=0.0.0.0 API_PORT=$PORT python app/main.py
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:5173,http://localhost:3000,https://metalli-sense-v2.vercel.app
+
+  # Node/Express backend
+  - type: web
+    name: metallisense-node-be
+    runtime: node
+    plan: free
+    rootDir: MetalliSense-Node-BE
+    buildCommand: npm install
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: JWT_COOKIE_EXPIRES_IN
+        value: 1
+      - key: AI_SERVICE_INDIVIDUAL_URL
+        sync: false
+      - key: AI_SERVICE_AGENT_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:5173,http://localhost:3000,https://metalli-sense-v2.vercel.app
+      - key: GOOGLE_GEMINI_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false

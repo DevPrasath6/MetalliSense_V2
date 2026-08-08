@@ -110,9 +110,10 @@ class ExplainableAICopilot:
             "explanation": explanation_text,
             "summary": f"Grade {grade} evaluation complete. Severity: {sev}.",
             "action_items": [f"Verify element composition for {grade}", recs_str],
-            "risk_assessment": f"Severity level {sev}. Human inspection recommended before pouring.",
+            "risk_level": sev,
             "confidence": 0.85,
-            "context": self._build_analysis_context(composition, grade, anomaly_result, alloy_result)
+            "context": self._build_analysis_context(composition, grade, anomaly_result, alloy_result),
+            "timestamp": self._get_timestamp()
         }
     
     def chat(self, user_message: str, include_context: bool = True, session_id: str = "default") -> Dict:
@@ -157,14 +158,21 @@ class ExplainableAICopilot:
         })
 
         # Get response
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=0.5,
-            max_tokens=1000
-        )
-
-        assistant_message = response.choices[0].message.content
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.5,
+                max_tokens=1000
+            )
+            assistant_message = response.choices[0].message.content
+        except Exception as e:
+            print(f"Groq API call error: {e}")
+            return {
+                "response": "The AI copilot is temporarily unavailable (could not reach the Groq API). "
+                             "Please try again in a moment.",
+                "conversation_id": None
+            }
 
         # Update history
         session["history"].append({
