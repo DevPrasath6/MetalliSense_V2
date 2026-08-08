@@ -12,7 +12,14 @@ class SpectrometerOPCUAClient {
     this.client = null;
     this.session = null;
     this.subscription = null;
-    this.endpointUrl = 'opc.tcp://localhost:4334/MetalliSense/Spectrometer';
+    // Defaults to the in-process simulator; set OPC_UA_ENDPOINT_URL to point
+    // at a real spectrometer's OPC-UA server instead (e.g.
+    // opc.tcp://192.168.1.50:4840). Its node IDs almost certainly differ
+    // from the simulator's (see startMonitoring() below) and will need
+    // updating to match the real device's address space.
+    this.endpointUrl =
+      process.env.OPC_UA_ENDPOINT_URL ||
+      'opc.tcp://localhost:4334/MetalliSense/Spectrometer';
     this.isConnected = false;
     this.connectionStatus = 'Disconnected';
     this.lastError = null;
